@@ -17,6 +17,13 @@ class Settings(BaseSettings):
     admin_password: str | None = None
     bcrypt_rounds: int = 12
 
+    @field_validator("jwt_secret")
+    @classmethod
+    def _strong_secret(cls, v: str) -> str:
+        if len(v) < 32:
+            raise ValueError("JWT_SECRET must be at least 32 characters")
+        return v
+
     @field_validator("postgres_url")
     @classmethod
     def _async_driver(cls, v: str) -> str:

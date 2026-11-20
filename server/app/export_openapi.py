@@ -6,7 +6,7 @@ from pathlib import Path
 
 # The schema does not need a live database or real secrets.
 os.environ.setdefault("POSTGRES_URL", "postgresql+asyncpg://user:pass@localhost/tandem")
-os.environ.setdefault("JWT_SECRET", "openapi-export")
+os.environ.setdefault("JWT_SECRET", "openapi-export-openapi-export-0123456")
 
 from app.main import create_app  # noqa: E402
 

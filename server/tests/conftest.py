@@ -10,7 +10,7 @@ from sqlalchemy import text
 
 # Must run before the app is imported: tests always use the dedicated test database.
 os.environ["POSTGRES_URL"] = os.environ["TEST_POSTGRES_URL"]
-os.environ.setdefault("JWT_SECRET", "test-secret")
+os.environ.setdefault("JWT_SECRET", "test-secret-test-secret-test-secret-01")
 os.environ["BCRYPT_ROUNDS"] = "4"
 os.environ["ADMIN_EMAIL"] = ""
 os.environ["ADMIN_PASSWORD"] = ""
