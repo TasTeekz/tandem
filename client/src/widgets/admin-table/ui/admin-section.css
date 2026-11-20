@@ -3,4 +3,5 @@
 .admin-foot { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; justify-content: space-between; }
 .admin-total { color: var(--c-muted); font-size: var(--t-sm); }
 .admin-actions { display: inline-flex; gap: var(--s-1); justify-content: flex-end; }
-.admin-cell-main { font-weight: 600; overflow-wrap: anywhere; }
+.admin-cell-main { font-weight: 600; white-space: nowrap; }
+.t-table { min-width: 680px; }
