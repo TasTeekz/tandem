@@ -1,0 +1,28 @@
+# secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+server/uploads/
+
+# node
+node_modules/
+client/dist/
+*.tsbuildinfo
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# local claude state
+.claude/settings.local.json
