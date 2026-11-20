@@ -1,4 +1,5 @@
 import mimetypes
+import re
 import uuid
 from urllib.parse import quote
 
@@ -89,12 +90,13 @@ async def download(session: AsyncSession, user: User, material_id: uuid.UUID) ->
     material = await _load(session, material_id)
     await groups.require_member(session, user, material.group_id)
     full = await repo.get_with_content(session, material_id)
-    ascii_name = full.file_name.encode("ascii", "replace").decode().replace('"', "'")
+    ascii_name = re.sub("[" + chr(0) + "-" + chr(31) + chr(127) + ";]", "", full.file_name)
+    ascii_name = ascii_name.encode("ascii", "replace").decode().replace('"', "'")
     disposition = f"attachment; filename=\"{ascii_name}\"; filename*=UTF-8''{quote(full.file_name)}"
     return Response(
         content=full.content,
         media_type=full.mime_type,
-        headers={"Content-Disposition": disposition},
+        headers={"Content-Disposition": disposition, "X-Content-Type-Options": "nosniff"},
     )
 
 

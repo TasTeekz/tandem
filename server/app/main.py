@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
 from app.core.config import get_settings
-from app.core.errors import register_handlers
+from app.core.errors import UploadLimitMiddleware, register_handlers
 from app.db.session import get_sessionmaker
 from app.features.admin.router import router as admin_router
 from app.features.auth import service as auth_service
@@ -46,6 +46,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
         expose_headers=["Content-Disposition"],
     )
+    app.add_middleware(UploadLimitMiddleware, limit_bytes=get_settings().max_upload_bytes)
     register_handlers(app)
 
     api = APIRouter(prefix="/api/v1")
@@ -66,6 +67,35 @@ def create_app() -> FastAPI:
     @app.get("/health", tags=["health"])
     async def get_health() -> dict[str, str]:
         return {"status": "ok"}
+
+    original_openapi = app.openapi
+
+    def openapi_with_error_envelope():
+        if app.openapi_schema is None:
+            schema = original_openapi()
+            detail = {
+                "type": "object",
+                "properties": {"field": {"type": "string"}, "message": {"type": "string"}},
+            }
+            schema["components"]["schemas"]["HTTPValidationError"] = {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "required": ["error"],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": ["code", "message"],
+                        "properties": {
+                            "code": {"type": "string"},
+                            "message": {"type": "string"},
+                            "details": {"type": "array", "items": detail},
+                        },
+                    }
+                },
+            }
+        return app.openapi_schema
+
+    app.openapi = openapi_with_error_envelope  # type: ignore[method-assign]
 
     names = [r.name for r in app.routes if isinstance(r, APIRoute)]
     dupes = {n for n in names if names.count(n) > 1}

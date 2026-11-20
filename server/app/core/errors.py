@@ -1,4 +1,5 @@
 import logging
+import re
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -36,6 +37,27 @@ def _envelope(status: int, code: str, message: str, details: list | None = None)
         error["details"] = details
     return JSONResponse({"error": error}, status_code=status)
 
+
+class UploadLimitMiddleware:
+    """Rejects oversize uploads by Content-Length before the multipart body is spooled."""
+
+    def __init__(self, app, limit_bytes: int, overhead: int = 64 * 1024):
+        self.app, self.max = app, limit_bytes + overhead
+
+    async def __call__(self, scope, receive, send):
+        if (
+            scope["type"] == "http"
+            and scope["method"] == "POST"
+            and _UPLOAD_PATH.match(scope["path"])
+        ):
+            length = dict(scope["headers"]).get(b"content-length", b"")
+            if length.isdigit() and int(length) > self.max:
+                resp = _envelope(413, "file_too_large", "File is too large")
+                return await resp(scope, receive, send)
+        await self.app(scope, receive, send)
+
+
+_UPLOAD_PATH = re.compile(r"^/api/v1/groups/[^/]+/materials/?$")
 
 _HTTP_CODES = {401: "not_authenticated", 403: "forbidden", 404: "not_found"}
 
