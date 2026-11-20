@@ -34,13 +34,11 @@ services:
 
   # React SPA (Vite).
   - type: web
-    name: tandem-web
+    name: tandem
     runtime: static
-    plan: free
-    region: frankfurt
     rootDir: client
     buildCommand: npm ci && npm run build
-    staticPublishPath: dist
+    staticPublishPath: ./dist
     routes:
       - type: rewrite
         source: /*
