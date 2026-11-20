@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMessages, MessageBubble } from '@/entities/message'
+import { PAGE_SIZE, useLoadEarlier, useMessages, MessageBubble } from '@/entities/message'
 import { MessageComposer } from '@/features/message-send'
 import { errorMessage } from '@/shared/api'
 import { Button, EmptyState, Skeleton } from '@/shared/ui'
@@ -11,6 +11,19 @@ export function GroupChat({ groupId, meId }: { groupId: string; meId: string }) 
   const { data, isPending, isError, error, refetch } = useMessages(groupId)
   const list = useRef<HTMLUListElement>(null)
   const count = data?.length ?? 0
+  const earlier = useLoadEarlier(groupId)
+  const [exhausted, setExhausted] = useState(false)
+  const loadEarlier = () => {
+    const el = list.current
+    const before = el?.scrollHeight ?? 0
+    earlier.mutate(undefined, {
+      onSuccess: (n) => {
+        if (n < PAGE_SIZE) setExhausted(true)
+        // Keep the reader on the same message after older ones are prepended.
+        requestAnimationFrame(() => { if (el) el.scrollTop += el.scrollHeight - before })
+      },
+    })
+  }
 
   // Follow new messages only while the reader is already near the bottom.
   useEffect(() => {
@@ -31,6 +44,9 @@ export function GroupChat({ groupId, meId }: { groupId: string; meId: string }) 
         <div className="chat__list"><EmptyState icon="chat" title={t('chat.emptyTitle')} text={t('chat.emptyText')} /></div>
       ) : (
         <ul className="chat__list" ref={list} aria-live="polite" aria-relevant="additions">
+          {!exhausted && count >= PAGE_SIZE && (
+            <li className="chat__earlier"><Button variant="ghost" size="sm" loading={earlier.isPending} onClick={loadEarlier}>{t('chat.loadEarlier')}</Button></li>
+          )}
           {data.map((m) => <MessageBubble key={m.id} message={m} mine={m.author_id === meId} />)}
         </ul>
       )}

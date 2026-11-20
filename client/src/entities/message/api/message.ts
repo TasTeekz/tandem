@@ -19,12 +19,28 @@ export function useMessages(groupId: string) {
     queryFn: async () => {
       const prev = qc.getQueryData<Message[]>(key(groupId))
       const after = prev?.at(-1)?.id
-      const res = await api.get<Page<Message>>(`/groups/${groupId}/messages`, after ? { after, limit: 100 } : { limit: 50 })
+      const res = await api.get<Page<Message>>(`/groups/${groupId}/messages`, after ? { after, limit: 100 } : { limit: PAGE_SIZE })
       return merge(prev, res.items)
     },
     refetchInterval: POLL_MS,
     staleTime: 0,
     gcTime: 0,
+  })
+}
+
+export const PAGE_SIZE = 50
+
+/** Prepends the page before the oldest cached message; resolves with how many were fetched. */
+export function useLoadEarlier(groupId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async () => {
+      const before = qc.getQueryData<Message[]>(key(groupId))?.[0]?.id
+      if (!before) return 0
+      const res = await api.get<Page<Message>>(`/groups/${groupId}/messages`, { before, limit: PAGE_SIZE })
+      qc.setQueryData<Message[]>(key(groupId), (prev = []) => [...res.items.filter((m) => !prev.some((p) => p.id === m.id)), ...prev])
+      return res.items.length
+    },
   })
 }
 
