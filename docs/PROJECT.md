@@ -13,7 +13,7 @@ Give students one place to study together: find or create a group, exchange file
 2. Study groups: create, join, leave, roles (mentor / member).
 3. Group collaboration: chat, material upload/download (files stored in Postgres).
 4. Goals and per-member progress tracking with a progress dashboard.
-5. In-app notifications (new message, new material, new goal, progress milestones).
+5. In-app notifications (new message, new material, new goal for members; progress milestones for mentors).
 6. Global search over groups, materials and users.
 7. Multilanguage UI: English, Russian, Kazakh.
 8. Admin panel: CRUD for users/groups/materials, role-based access.
@@ -37,7 +37,7 @@ Gap: nothing combines peer-led groups, chat, materials and visible progress in o
 
 ## 6. Use cases
 Actors: **Guest**, **Student** (registered user), **Mentor** (member with mentor role in a group), **Admin**.
-Use cases (Guest → 2, Student → rest, Mentor extends Student, Admin separate):
+Use cases (Guest → 1-2, Student → 3-10, Mentor extends Student → 11, Admin → 12; Admin may also act as mentor in any group):
 1. Register / Log in (Guest)
 2. Browse public groups (Guest)
 3. Edit profile and language (Student)
@@ -46,7 +46,7 @@ Use cases (Guest → 2, Student → rest, Mentor extends Student, Admin separate
 6. Chat in group (Student)
 7. Upload / download material (Student)
 8. Track my progress on goals (Student)
-9. Search groups, materials, users (Student)
+9. Search groups, materials, users (Student; results limited to what the caller may see)
 10. Read notifications (Student)
 11. Create / edit goals, remove members, moderate materials in own group (Mentor)
 12. Manage users, groups, materials, roles (Admin)
@@ -118,7 +118,7 @@ erDiagram
     bool is_read
     timestamptz created_at }
 ```
-Constraints: `(group_id,user_id)` unique in memberships, `(goal_id,user_id)` unique in goal_progress. Mentor-only actions are enforced by membership role; platform-wide admin by `users.role`.
+Constraints: `(group_id,user_id)` unique in memberships, `(goal_id,user_id)` unique in goal_progress. Mentor-only actions (edit group, goals, remove members, delete any group material) are enforced by membership role; the group owner is its first mentor and a group always keeps at least one mentor; platform-wide admin by `users.role`. Exact endpoints, permissions and error codes: `docs/API.md`.
 
 ## 8. Required demo features mapped to the app
 | Exam item | Where |
