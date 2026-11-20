@@ -68,6 +68,10 @@ def create_app() -> FastAPI:
     async def get_health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/ping", tags=["health"])
+    async def get_ping() -> str:
+        return "pong"
+
     original_openapi = app.openapi
 
     def openapi_with_error_envelope():
