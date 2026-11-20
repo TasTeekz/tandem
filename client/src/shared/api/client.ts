@@ -15,29 +15,32 @@ const url = (path: string, query?: Query) => {
   return `${API_BASE}${path}${s ? `?${s}` : ''}`
 }
 
-let refreshing: Promise<boolean> | null = null
-/** One refresh at a time; concurrent 401s share the same promise. */
-const refresh = (): Promise<boolean> => {
-  refreshing ??= (async () => {
+type RefreshResult = 'ok' | 'rejected' | 'failed'
+let refreshing: Promise<RefreshResult> | null = null
+/** One refresh at a time; concurrent 401s share the same promise. Only a 401 from the refresh endpoint ends the session. */
+const refresh = (): Promise<RefreshResult> => {
+  refreshing ??= (async (): Promise<RefreshResult> => {
     const current = getTokens()
-    if (!current) return false
+    if (!current) return 'rejected'
     try {
       const res = await fetch(url('/auth/refresh'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: current.refresh }) })
-      if (!res.ok) return false
+      if (res.status === 401) { setTokens(null); return 'rejected' }
+      if (!res.ok) return 'failed'
       const next = (await res.json()) as Schemas['TokenOut']
       setTokens({ access: next.access_token, refresh: next.refresh_token })
-      return true
-    } catch { return false }
+      return 'ok'
+    } catch { return 'failed' }
   })().finally(() => { refreshing = null })
   return refreshing
 }
 
 const send = (method: string, path: string, o: Options) => {
   const headers: Record<string, string> = {}
-  const tk = getTokens()
-  if (o.auth !== false && tk) headers.Authorization = `Bearer ${tk.access}`
+  const access = getTokens()?.access
+  if (o.auth !== false && access) headers.Authorization = `Bearer ${access}`
   if (o.body !== undefined) headers['Content-Type'] = 'application/json'
-  return fetch(url(path, o.query), { method, headers, body: o.form ?? (o.body !== undefined ? JSON.stringify(o.body) : undefined) })
+  const res = fetch(url(path, o.query), { method, headers, body: o.form ?? (o.body !== undefined ? JSON.stringify(o.body) : undefined) })
+  return res.then((r) => ({ res: r, used: access }))
 }
 
 const toError = async (res: Response) => {
@@ -46,11 +49,16 @@ const toError = async (res: Response) => {
 }
 
 async function request(method: string, path: string, o: Options = {}): Promise<Response> {
-  let res: Response
-  try { res = await send(method, path, o) } catch { throw new ApiError(0, 'network', 'Network error') }
-  if (res.status === 401 && o.auth !== false && getTokens()) {
-    if (await refresh()) res = await send(method, path, o)
-    if (res.status === 401) setTokens(null)
+  const attempt = async () => {
+    try { return await send(method, path, o) } catch { throw new ApiError(0, 'network', 'Network error') }
+  }
+  const first = await attempt()
+  const used = first.used
+  let res = first.res
+  if (res.status === 401 && o.auth !== false && used) {
+    // A newer token already landed (parallel refresh): just retry. Otherwise refresh first.
+    const stale = getTokens()?.access !== used
+    if (stale || (await refresh()) === 'ok') res = (await attempt()).res
   }
   if (!res.ok) throw await toError(res)
   return res
@@ -74,7 +82,9 @@ export const api = {
     const a = document.createElement('a')
     a.href = URL.createObjectURL(await res.blob())
     a.download = fileName
+    document.body.appendChild(a)
     a.click()
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(a.href), 10_000)
   },
 }
