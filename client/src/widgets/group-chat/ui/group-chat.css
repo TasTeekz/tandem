@@ -1,0 +1,5 @@
+.chat { display: grid; grid-template-rows: 1fr auto; height: min(70dvh, 640px); min-height: 360px; background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-lg); overflow: hidden; }
+.chat__list { margin: 0; padding: var(--s-4); list-style: none; overflow-y: auto; display: flex; flex-direction: column; gap: var(--s-2); overscroll-behavior: contain; }
+.chat__list > .t-empty { margin: auto; border: 0; }
+.chat__list > .t-skeleton { flex: none; }
+.chat__earlier { align-self: center; flex: none; }

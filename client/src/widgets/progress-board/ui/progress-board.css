@@ -1,0 +1,8 @@
+.pboard { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: var(--s-4); }
+.pcard { display: grid; gap: var(--s-4); animation: t-fade var(--d-med) var(--ease) both; }
+.pcard__head { display: flex; align-items: center; gap: var(--s-3); }
+.pcard__who { display: flex; align-items: center; gap: var(--s-2); min-width: 0; }
+.pcard__name { font-weight: 600; overflow-wrap: anywhere; }
+.pcard__me { color: var(--c-muted); font-weight: 400; }
+.pcard__goals { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s-3); }
+.pcard__goal { display: block; font-size: var(--t-xs); color: var(--c-muted); margin-bottom: 4px; overflow-wrap: anywhere; }

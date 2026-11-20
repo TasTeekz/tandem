@@ -1,4 +1,122 @@
 {
-  "common": { "loading": "Loading", "save": "Save changes", "cancel": "Cancel", "close": "Close", "search": "Search", "theme": "Theme", "language": "Language", "empty": "Nothing here yet", "previous": "Previous", "next": "Next", "page": "Page {{page}} of {{total}}", "dropFiles": "Drop a file here or browse", "dropHint": "Up to 10 MB", "tooManyBytes": "File is larger than 10 MB" },
-  "app": { "tagline": "Study together. Finish things." }
+  "common": {
+    "loading": "Loading", "save": "Save changes", "cancel": "Cancel", "close": "Close", "search": "Search", "theme": "Theme", "language": "Language",
+    "empty": "Nothing here yet", "pagination": "Pagination", "previous": "Previous", "next": "Next", "page": "Page {{page}} of {{total}}", "dropFiles": "Drop a file here or browse",
+    "dropHint": "Up to 10 MB", "tooManyBytes": "File is larger than 10 MB", "delete": "Delete", "edit": "Edit", "create": "Create", "retry": "Try again",
+    "actions": "Actions", "skipToContent": "Skip to content", "toggleTheme": "Switch light or dark theme"
+  },
+  "app": { "tagline": "Study together. Finish things." },
+  "errors": {
+    "validation_error": "Some fields are invalid. Check them and try again.",
+    "invalid_credentials": "Wrong email or password.",
+    "not_authenticated": "Please sign in to continue.",
+    "invalid_refresh_token": "Your session expired. Please sign in again.",
+    "account_disabled": "This account is disabled.",
+    "forbidden": "You do not have permission to do that.",
+    "not_found": "We could not find what you were looking for.",
+    "email_taken": "An account with this email already exists.",
+    "already_member": "You are already a member of this group.",
+    "not_member": "You are not a member of this group.",
+    "last_mentor": "A group must keep at least one mentor.",
+    "file_too_large": "The file is larger than 10 MB.",
+    "unsupported_media": "This file cannot be uploaded. It may be empty.",
+    "internal_error": "Something went wrong on our side. Please try again.",
+    "network": "Cannot reach the server. Check your connection.",
+    "loadFailed": "Could not load this section"
+  },
+  "nav": { "main": "Main navigation", "groups": "Groups", "search": "Search", "admin": "Admin", "explore": "Explore", "userMenu": "Account menu", "profile": "Profile" },
+  "auth": {
+    "email": "Email", "password": "Password", "fullName": "Full name", "login": "Sign in", "register": "Create account", "logout": "Sign out",
+    "loginTitle": "Welcome back", "loginSub": "Sign in to reach your study groups.", "registerTitle": "Join Tandem", "registerSub": "Create an account in a few seconds.",
+    "noAccount": "New here?", "haveAccount": "Already have an account?", "passwordHint": "At least 8 characters"
+  },
+  "locale": { "en": "English", "ru": "Русский", "kk": "Қазақша" },
+  "theme": { "system": "Follow system", "light": "Light", "dark": "Dark" },
+  "roles": { "mentor": "Mentor", "member": "Member", "student": "Student", "admin": "Admin" },
+  "home": {
+    "eyebrow": "Peer study groups",
+    "lead": "Find a group or start your own. Share materials, chat, set shared goals and see who is on track.",
+    "cta": "Get started",
+    "publicGroups": "Open groups to join",
+    "perks": {
+      "chat": { "title": "Talk it through", "text": "A chat for every group, always at hand." },
+      "materials": { "title": "Share what you have", "text": "Upload notes and files, up to 10 MB each." },
+      "goals": { "title": "See real progress", "text": "Shared goals with a progress ring for every member." }
+    }
+  },
+  "groups": {
+    "title": "Groups", "subtitle": "Your study groups and open groups you can join.", "mine": "My groups",
+    "mineEmptyTitle": "You have no groups yet", "mineEmptyText": "Create your own group or join an open one below.",
+    "discover": "Discover open groups", "filter": "Filter groups", "filterPlaceholder": "Title, subject or topic",
+    "discoverEmptyTitle": "No open groups found", "discoverEmptyText": "Try a different search, or create the first one."
+  },
+  "group": {
+    "public": "Public", "private": "Private", "noDescription": "No description yet.", "members": "Members: {{n}}", "create": "New group",
+    "createTitle": "Create a group", "editTitle": "Edit group", "title": "Title", "subject": "Subject", "description": "Description",
+    "publicHint": "Public group: anyone can find it and join", "saved": "Group saved", "created": "Group created", "deleted": "Group deleted",
+    "join": "Join", "joined": "You joined the group", "leave": "Leave group", "left": "You left the group",
+    "leaveConfirm": "You will lose access to the chat, materials and goals of this group.",
+    "notFoundTitle": "Group not found", "backToGroups": "Back to groups", "tabsLabel": "Group sections",
+    "tabs": { "chat": "Chat", "materials": "Materials", "goals": "Goals and progress", "members": "Members" },
+    "joinToSeeTitle": "Join to take part", "joinToSeeText": "Chat, materials, goals and members are visible to members of this group.",
+    "loginToSeeTitle": "Sign in to take part", "loginToSeeText": "Sign in or create an account to join this group.",
+    "deleteTitle": "Delete group", "deleteConfirm": "Delete \"{{title}}\" with all its messages, materials and goals? This cannot be undone."
+  },
+  "chat": { "loadEarlier": "Load earlier messages", "placeholder": "Write a message", "send": "Send message", "emptyTitle": "No messages yet", "emptyText": "Say hello and start the conversation." },
+  "materials": {
+    "title": "Title", "by": "by {{name}}", "uploaded": "File uploaded", "uploading": "Uploading", "deleted": "Material deleted",
+    "emptyTitle": "No materials yet", "emptyText": "Upload notes, slides or anything the group needs.", "download": "Download",
+    "deleteTitle": "Delete material", "deleteConfirm": "Delete \"{{title}}\"? This cannot be undone."
+  },
+  "goals": {
+    "title": "Title", "heading": "Goals", "add": "Add goal", "emptyTitle": "No goals yet", "emptyMentor": "Add the first goal so everyone knows what to aim for.",
+    "emptyText": "Mentors of this group have not set any goals yet.", "due": "Due {{date}}", "saved": "Goal saved", "deleted": "Goal deleted",
+    "editTitle": "Edit goal", "createTitle": "New goal", "description": "Description", "dueDate": "Due date", "myProgress": "My progress",
+    "deleteTitle": "Delete goal", "deleteConfirm": "Delete \"{{title}}\" and everyone's progress on it?"
+  },
+  "progress": {
+    "heading": "Team progress", "emptyTitle": "Nothing to track yet", "emptyText": "Progress appears here once the group has goals.", "overall": "Overall progress of {{name}}"
+  },
+  "members": {
+    "you": "(you)", "joined": "Joined {{date}}", "actions": "Actions for {{name}}", "makeMentor": "Make mentor", "makeMember": "Make regular member",
+    "remove": "Remove from group", "removed": "Member removed", "updated": "Role updated", "removeTitle": "Remove member", "removeConfirm": "Remove {{name}} from this group?"
+  },
+  "notifications": {
+    "title": "Notifications", "subtitle": "What happened in your groups.", "markRead": "Mark as read", "markAll": "Mark all as read",
+    "emptyTitle": "You are all caught up", "emptyText": "New messages, materials and goals will show up here.", "open": "Open group",
+    "bellUnread": "Notifications, {{n}} unread",
+    "type": { "new_message": "New message", "new_material": "New material", "new_goal": "New goal", "progress_milestone": "Milestone" }
+  },
+  "search": {
+    "title": "Search", "subtitle": "Find groups, materials and people.", "label": "Search", "placeholder": "Type a group, file or name",
+    "startTitle": "Start typing to search", "startText": "Results for groups, materials and people appear as you type.",
+    "noResultsTitle": "Nothing found", "noResultsText": "No results for \"{{q}}\". Try a shorter or different word.",
+    "groups": "Groups", "materials": "Materials", "users": "People", "openGroup": "Open group"
+  },
+  "profile": {
+    "title": "Profile", "subtitle": "Your name, language and look.", "saved": "Profile saved", "newPassword": "New password",
+    "newPasswordHint": "Leave empty to keep the current password", "memberSince": "Member since {{date}}"
+  },
+  "admin": {
+    "title": "Admin panel", "subtitle": "Manage users, groups and materials.", "stats": "Platform statistics",
+    "stat": { "users": "Users", "active_users": "Active users", "groups": "Groups", "materials": "Materials", "messages": "Messages", "goals": "Goals" },
+    "tabs": { "users": "Users", "groups": "Groups", "materials": "Materials" },
+    "searchPlaceholder": "Search this table", "emptyTitle": "No rows found", "emptyText": "Change the search or add a new one.", "total": "Total: {{n}}",
+    "created": "Created", "saved": "Saved", "deleted": "Deleted", "deleteTitle": "Confirm deletion",
+    "users": {
+      "create": "New user", "edit": "Edit user", "role": "Role", "status": "Status", "activeBadge": "Active", "disabledBadge": "Disabled",
+      "active": "Account is active", "passwordKeep": "Leave empty to keep the current password",
+      "deleteConfirm": "Delete {{name}}? Their messages and progress are removed and groups they own are deleted. This cannot be undone."
+    },
+    "groups": {
+      "create": "New group", "edit": "Edit group", "owner": "Owner", "pickOwner": "Choose an owner", "visibility": "Visibility", "membersCol": "Members",
+      "deleteConfirm": "Delete \"{{title}}\" with all its content? This cannot be undone."
+    },
+    "materials": {
+      "create": "Upload material", "edit": "Rename material", "group": "Group", "pickGroup": "Choose a group", "titleHint": "Optional, defaults to the file name",
+      "file": "File", "size": "Size", "uploader": "Uploaded by", "deleteConfirm": "Delete \"{{title}}\"? This cannot be undone."
+    }
+  },
+  "notFound": { "title": "Page not found", "text": "The page you opened does not exist or was moved.", "home": "Go to start" },
+  "forbidden": { "title": "No access", "text": "You do not have permission to open this page." }
 }

@@ -1,0 +1,8 @@
+.msg { display: flex; align-items: flex-end; gap: var(--s-2); max-width: 100%; animation: msg-in var(--d-med) var(--ease) both; }
+.msg--mine { justify-content: flex-end; }
+.msg__bubble { max-width: min(78%, 560px); padding: var(--s-2) var(--s-3); background: var(--c-sunken); border-radius: 16px 16px 16px 4px; display: grid; gap: 2px; }
+.msg--mine .msg__bubble { background: var(--c-primary); color: var(--c-on-primary); border-radius: 16px 16px 4px 16px; }
+.msg__author { font-size: var(--t-xs); font-weight: 700; color: var(--c-primary); }
+.msg__body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg__time { font-size: 0.6875rem; opacity: 0.7; justify-self: end; }
+@keyframes msg-in { from { opacity: 0; transform: translateY(6px); } }

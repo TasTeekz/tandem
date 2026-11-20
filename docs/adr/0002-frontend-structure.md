@@ -32,3 +32,8 @@ Slices map to API sections, parallelise work, and keep the UI kit and API client
 - Auth and admin guards live in `app`.
 - All strings use i18n keys from `shared/i18n`; API types are generated, never hand-written.
 - Cross-entity composition happens in widgets or pages, not in entities.
+
+## Token storage tradeoff
+Access and refresh JWTs live in `localStorage` so a session survives reloads without a server-side cookie flow; any XSS could read them.
+Mitigations: React escapes output, no `dangerouslySetInnerHTML`, short access TTL (30 min), post-login redirects restricted to same-origin paths.
+Moving to httpOnly cookies would need backend changes (cookie auth plus CSRF protection), so it is deferred.

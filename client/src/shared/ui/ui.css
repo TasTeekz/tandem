@@ -73,7 +73,7 @@
 /* Badge, Avatar */
 .t-badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: var(--r-pill); font-size: var(--t-xs); font-weight: 600; line-height: 1.6; }
 .t-badge--neutral { background: var(--c-sunken); color: var(--c-muted); }
-.t-badge--primary { background: var(--c-primary-soft); color: var(--c-primary); }
+.t-badge--primary { background: var(--c-primary-soft); color: var(--c-primary-hover); }
 .t-badge--accent { background: var(--c-accent-soft); color: var(--c-warning); }
 .t-badge--success { background: var(--c-success-soft); color: var(--c-success); }
 .t-badge--danger { background: var(--c-danger-soft); color: var(--c-danger); }

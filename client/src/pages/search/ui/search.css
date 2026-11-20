@@ -1,0 +1,5 @@
+.search-results { display: grid; gap: var(--s-6); margin-top: var(--s-5); }
+.search-results h2 .count { margin-left: var(--s-2); font: 600 var(--t-sm)/1 var(--font-body); color: var(--c-muted); background: var(--c-sunken); padding: 3px 9px; border-radius: var(--r-pill); vertical-align: middle; }
+.search-user { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-3) var(--s-4); background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-md); font-weight: 600; }
+.search-user span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.search-user svg { color: var(--c-muted); }

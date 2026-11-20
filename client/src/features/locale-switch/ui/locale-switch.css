@@ -1,0 +1,2 @@
+.locale-trigger { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 var(--s-3); border-radius: var(--r-md); font: 600 var(--t-xs)/1 var(--font-body); letter-spacing: 0.04em; transition: background-color var(--d-fast) var(--ease); }
+@media (hover: hover) { .locale-trigger:hover { background: var(--c-sunken); } }

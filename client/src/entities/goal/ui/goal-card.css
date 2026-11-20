@@ -1,0 +1,7 @@
+.goal-card { display: grid; gap: var(--s-3); justify-items: start; padding: var(--s-4); background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-lg); animation: t-fade var(--d-med) var(--ease) both; }
+.goal-card > :last-child { justify-self: stretch; }
+.goal-card__head { display: flex; align-items: flex-start; gap: var(--s-3); width: 100%; }
+.goal-card__icon { flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px; background: var(--c-accent-soft); color: var(--c-warning); }
+.goal-card__main { flex: 1; min-width: 0; }
+.goal-card__title { font-size: var(--t-md); overflow-wrap: anywhere; }
+.goal-card__desc { color: var(--c-muted); font-size: var(--t-sm); margin-top: 2px; overflow-wrap: anywhere; }

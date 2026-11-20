@@ -25,6 +25,8 @@ const paths = {
   logout: 'M9 4H5v16h4M16 8l4 4-4 4M20 12H9',
   info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 11v5M12 8h.01',
   alert: 'M12 3 2 20h20L12 3ZM12 10v4.5M12 17.5h.01',
+  send: 'M21 3 10 14M21 3l-7 18-4-7-7-4 18-7Z',
+  lock: 'M6 11h12v9H6v-9ZM8.5 11V8a3.5 3.5 0 0 1 7 0v3M12 15v2',
 } as const
 
 export type IconName = keyof typeof paths
