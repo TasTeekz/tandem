@@ -1,7 +1,7 @@
 {
   "common": {
     "loading": "Loading", "save": "Save changes", "cancel": "Cancel", "close": "Close", "search": "Search", "theme": "Theme", "language": "Language",
-    "empty": "Nothing here yet", "previous": "Previous", "next": "Next", "page": "Page {{page}} of {{total}}", "dropFiles": "Drop a file here or browse",
+    "empty": "Nothing here yet", "pagination": "Pagination", "previous": "Previous", "next": "Next", "page": "Page {{page}} of {{total}}", "dropFiles": "Drop a file here or browse",
     "dropHint": "Up to 10 MB", "tooManyBytes": "File is larger than 10 MB", "delete": "Delete", "edit": "Edit", "create": "Create", "retry": "Try again",
     "actions": "Actions", "skipToContent": "Skip to content", "toggleTheme": "Switch light or dark theme"
   },
@@ -62,7 +62,7 @@
     "loginToSeeTitle": "Sign in to take part", "loginToSeeText": "Sign in or create an account to join this group.",
     "deleteTitle": "Delete group", "deleteConfirm": "Delete \"{{title}}\" with all its messages, materials and goals? This cannot be undone."
   },
-  "chat": { "placeholder": "Write a message", "send": "Send message", "emptyTitle": "No messages yet", "emptyText": "Say hello and start the conversation." },
+  "chat": { "loadEarlier": "Load earlier messages", "placeholder": "Write a message", "send": "Send message", "emptyTitle": "No messages yet", "emptyText": "Say hello and start the conversation." },
   "materials": {
     "title": "Title", "by": "by {{name}}", "uploaded": "File uploaded", "uploading": "Uploading", "deleted": "Material deleted",
     "emptyTitle": "No materials yet", "emptyText": "Upload notes, slides or anything the group needs.", "download": "Download",
