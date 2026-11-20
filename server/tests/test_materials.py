@@ -1,5 +1,8 @@
+import uuid
 from urllib.parse import quote
 
+from app.db.session import get_sessionmaker
+from app.features.materials.models import Material
 from tests.conftest import API
 
 MAX = 10 * 1024 * 1024
@@ -91,3 +94,34 @@ async def test_delete_permissions(client, register, make_group):
         await client.delete(f"{API}/materials/{b}", headers=owner.headers)
     ).status_code == 204  # mentor
     assert (await client.delete(f"{API}/materials/{b}", headers=owner.headers)).status_code == 404
+
+
+async def test_oversize_content_length_rejected_early(client, register, make_group):
+    owner = await register("Owner")
+    gid = (await make_group(owner))["id"]
+    r = await client.post(
+        f"{API}/groups/{gid}/materials",
+        content=b"x",
+        headers={**owner.headers, "Content-Length": str(MAX + 200_000), "Content-Type": "x/y"},
+    )
+    assert r.status_code == 413 and r.json()["error"]["code"] == "file_too_large"
+
+
+async def test_download_header_injection_stripped(client, register, make_group):
+    owner = await register("Owner")
+    gid = (await make_group(owner))["id"]
+    r = await client.post(
+        f"{API}/groups/{gid}/materials",
+        files=_file("a\r\nX-Evil: 1;b.txt"),
+        headers=owner.headers,
+    )
+    mid = r.json()["id"]
+    async with get_sessionmaker()() as s:  # httpx escapes CR/LF, so plant them directly
+        m = await s.get(Material, uuid.UUID(mid))
+        m.file_name = "a\r\nX-Evil: 1;b.txt"
+        await s.commit()
+    dl = await client.get(f"{API}/materials/{mid}/download", headers=owner.headers)
+    cd = dl.headers["content-disposition"]
+    assert "X-Evil" not in dl.headers and "\r" not in cd and "\n" not in cd
+    assert cd.startswith('attachment; filename="aX-Evil: 1b.txt"') and "filename*=UTF-8''" in cd
+    assert dl.headers["x-content-type-options"] == "nosniff"

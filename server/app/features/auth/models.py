@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Boolean, CheckConstraint, Index, String
+from sqlalchemy import Boolean, CheckConstraint, Index, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, Ts
@@ -26,4 +26,5 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(16), default="student")
     locale: Mapped[str] = mapped_column(String(4), default="en")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    token_version: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[Ts]

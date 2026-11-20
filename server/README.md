@@ -4,7 +4,7 @@ FastAPI + async SQLAlchemy/asyncpg + Alembic. Contract: `../docs/API.md`, layout
 
 ```bash
 uv sync                                   # Python 3.12 venv + deps
-export POSTGRES_URL=postgresql+asyncpg://user:pass@localhost:5432/tandem JWT_SECRET=change-me
+export POSTGRES_URL=postgresql+asyncpg://user:pass@localhost:5432/tandem JWT_SECRET=change-me-to-a-random-string-of-32-chars-or-more
 uv run alembic upgrade head               # migrations (pg_trgm indexes when the extension exists)
 uv run python -m app.seed_demo            # optional, idempotent demo data (password demo12345)
 uv run uvicorn app.main:app --reload      # http://localhost:8000/docs
