@@ -1,0 +1,6 @@
+.admin-bar { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: flex-end; justify-content: space-between; }
+.admin-bar .t-field { flex: 1 1 240px; max-width: 420px; }
+.admin-foot { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; justify-content: space-between; }
+.admin-total { color: var(--c-muted); font-size: var(--t-sm); }
+.admin-actions { display: inline-flex; gap: var(--s-1); justify-content: flex-end; }
+.admin-cell-main { font-weight: 600; overflow-wrap: anywhere; }
