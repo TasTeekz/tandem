@@ -1,0 +1,7 @@
+.notif { position: relative; display: flex; align-items: flex-start; gap: var(--s-3); padding: var(--s-4); background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-md); animation: t-fade var(--d-med) var(--ease) both; }
+.notif--unread { background: var(--c-primary-soft); border-color: color-mix(in srgb, var(--c-primary) 40%, var(--c-line)); }
+.notif__icon { flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px; background: var(--c-surface); color: var(--c-primary); }
+.notif__main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.notif__title { font-weight: 600; overflow-wrap: anywhere; }
+.notif__body { font-size: var(--t-sm); overflow-wrap: anywhere; }
+.notif__meta { font-size: var(--t-xs); color: var(--c-muted); }
