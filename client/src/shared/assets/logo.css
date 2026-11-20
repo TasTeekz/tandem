@@ -1,0 +1,2 @@
+.t-logo { display: inline-flex; align-items: center; gap: 0.35em; line-height: 1; }
+.t-logo__word { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.04em; color: var(--c-ink); font-size: 1.28em; padding-bottom: 0.08em; }
