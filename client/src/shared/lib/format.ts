@@ -6,8 +6,14 @@ export const formatBytes = (n: number) => {
   return `${(n / 1024 ** 2).toFixed(1)} MB`
 }
 
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/
+
+/** Date-only strings (goal due dates) are calendar days: format in UTC so negative-offset zones do not show the day before. */
 export const formatDate = (iso: string, lng: string, withTime = false) =>
-  new Intl.DateTimeFormat(lng, withTime ? { dateStyle: 'medium', timeStyle: 'short' } : { dateStyle: 'medium' }).format(new Date(iso))
+  new Intl.DateTimeFormat(lng, {
+    ...(withTime ? { dateStyle: 'medium', timeStyle: 'short' } : { dateStyle: 'medium' }),
+    ...(DATE_ONLY.test(iso) ? { timeZone: 'UTC' } : {}),
+  }).format(new Date(iso))
 
 export const formatTime = (iso: string, lng: string) => new Intl.DateTimeFormat(lng, { timeStyle: 'short' }).format(new Date(iso))
 
