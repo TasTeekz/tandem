@@ -1,0 +1,4 @@
+.stats { margin: 0 0 var(--s-6); padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-3); }
+.stat { display: grid; gap: 4px; padding: var(--s-4); animation: t-fade var(--d-med) var(--ease) both; }
+.stat__n { font: 700 var(--t-2xl)/1 var(--font-display); letter-spacing: -0.02em; }
+.stat__l { color: var(--c-muted); font-size: var(--t-sm); }
