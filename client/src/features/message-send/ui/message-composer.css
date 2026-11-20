@@ -1,0 +1,6 @@
+.composer { display: flex; align-items: flex-end; gap: var(--s-2); padding: var(--s-3); border-top: 1px solid var(--c-line); background: var(--c-surface); }
+.composer__input { flex: 1; min-width: 0; resize: none; max-height: 140px; field-sizing: content; padding: 10px var(--s-3); background: var(--c-bg); border: 1px solid var(--c-line-strong); border-radius: var(--r-md); line-height: 1.4; outline: none; transition: border-color var(--d-fast) var(--ease), box-shadow var(--d-med) var(--ease); }
+.composer__input:focus { border-color: var(--c-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 25%, transparent); }
+.composer__send { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: var(--r-md); background: var(--c-primary); color: var(--c-on-primary); cursor: pointer; transition: transform var(--d-fast) var(--ease-spring), opacity var(--d-fast) var(--ease); }
+.composer__send:active:not(:disabled) { transform: scale(0.92); }
+.composer__send:disabled { opacity: 0.45; cursor: not-allowed; }
