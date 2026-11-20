@@ -48,3 +48,6 @@ main { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+.page > * { min-width: 0; }
+.t-pagehead > div { min-width: 0; }
+.t-pagehead h1 { overflow-wrap: anywhere; font-size: clamp(1.75rem, 7vw, var(--t-3xl)); }
