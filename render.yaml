@@ -1,0 +1,53 @@
+# Render Blueprint: New > Blueprint > pick this repo. Free plan; change `region` to taste.
+services:
+  # FastAPI API (Python 3.12, uv). Migrations run on every start (no preDeployCommand on free plan).
+  - type: web
+    name: tandem-api
+    runtime: python
+    plan: free
+    region: frankfurt # keep both services and the DB in one region
+    rootDir: server
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: POSTGRES_URL # postgresql+asyncpg://user:pass@host:5432/db (async driver required)
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: JWT_ACCESS_TTL_MIN
+        value: "30"
+      - key: JWT_REFRESH_TTL_DAYS
+        value: "14"
+      - key: MAX_UPLOAD_MB
+        value: "10"
+      # Not wired via fromService: its `host` is the private-network name, not the public
+      # https://<name>.onrender.com URL. Set to the static site's public URL after first deploy.
+      - key: CORS_ORIGINS
+        sync: false
+
+  # React SPA (Vite).
+  - type: web
+    name: tandem-web
+    runtime: static
+    plan: free
+    region: frankfurt
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Full public API origin including https:// (e.g. https://tandem-api.onrender.com), no trailing slash.
+      # fromService `host` would be private-network only and scheme-less, so it is set by hand.
+      # Baked in at build time: redeploy the site after changing it.
+      - key: VITE_API_URL
+        sync: false
