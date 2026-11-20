@@ -54,7 +54,7 @@ async def test_login_failures(client, register, admin):
     )
     assert r.status_code == 403 and r.json()["error"]["code"] == "account_disabled"
     r = await client.get(f"{API}/auth/me", headers=acc.headers)
-    assert r.json()["error"]["code"] == "account_disabled"
+    assert r.status_code == 401  # deactivation revoked the old token
 
 
 async def test_refresh(client, register):
@@ -99,5 +99,44 @@ async def test_profile_update(client, register):
         f"{API}/auth/login", json={"email": "fay@example.com", "password": "newpassword1"}
     )
     assert login.status_code == 200
-    r = await client.patch(f"{API}/profile", json={"locale": "xx"}, headers=acc.headers)
+    fresh = {"Authorization": f"Bearer {login.json()['access_token']}"}
+    r = await client.patch(f"{API}/profile", json={"locale": "xx"}, headers=fresh)
     assert r.status_code == 422
+
+
+async def test_password_change_revokes_old_tokens(client, register):
+    a = await register("Alice")
+    r = await client.patch(f"{API}/profile", json={"password": "newpassword99"}, headers=a.headers)
+    assert r.status_code == 200, r.text
+    me = await client.get(f"{API}/profile", headers=a.headers)
+    assert me.status_code == 401
+    rf = await client.post(f"{API}/auth/refresh", json={"refresh_token": a.refresh})
+    assert rf.status_code == 401 and rf.json()["error"]["code"] == "invalid_refresh_token"
+
+
+async def test_admin_deactivation_revokes_tokens(client, register, admin):
+    a = await register("Alice")
+    r = await client.patch(
+        f"{API}/admin/users/{a.id}", json={"is_active": False}, headers=admin.headers
+    )
+    assert r.status_code == 200, r.text
+    r = await client.patch(
+        f"{API}/admin/users/{a.id}", json={"is_active": True}, headers=admin.headers
+    )
+    rf = await client.post(f"{API}/auth/refresh", json={"refresh_token": a.refresh})
+    assert rf.status_code == 401 and rf.json()["error"]["code"] == "invalid_refresh_token"
+
+
+async def test_login_unknown_email(client):
+    r = await client.post(f"{API}/auth/login", json={"email": "no@x.com", "password": "whatever12"})
+    assert r.status_code == 401 and r.json()["error"]["code"] == "invalid_credentials"
+
+
+def test_short_jwt_secret_rejected():
+    import pytest
+    from pydantic import ValidationError
+
+    from app.core.config import Settings
+
+    with pytest.raises(ValidationError, match="32"):
+        Settings(postgres_url="postgresql://x/y", jwt_secret="short")

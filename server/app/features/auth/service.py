@@ -15,7 +15,8 @@ ACCOUNT_DISABLED = AppError("account_disabled", 403, "Account is disabled")
 
 def _tokens(user: User) -> TokenOut:
     return TokenOut(
-        access_token=create_token(user.id, "access"), refresh_token=create_token(user.id, "refresh")
+        access_token=create_token(user.id, "access", user.token_version),
+        refresh_token=create_token(user.id, "refresh", user.token_version),
     )
 
 
@@ -49,6 +50,8 @@ async def create_user(
 
 
 async def update_user(session: AsyncSession, user: User, fields: dict) -> User:
+    if "password" in fields or fields.get("is_active") is False:
+        user.token_version += 1  # invalidates every token issued so far
     if "password" in fields:
         user.password_hash = await hash_password(fields.pop("password"))
     if "email" in fields and fields["email"] != user.email:
@@ -76,9 +79,20 @@ async def register(session: AsyncSession, data: RegisterIn) -> AuthOut:
     return AuthOut(user=UserOut.model_validate(user), **_tokens(user).model_dump())
 
 
+_DUMMY: list[str] = []
+
+
+async def _dummy_hash() -> str:
+    if not _DUMMY:
+        _DUMMY.append(await hash_password("dummy-password"))
+    return _DUMMY[0]
+
+
 async def login(session: AsyncSession, email: str, password: str) -> AuthOut:
     user = await repo.get_by_email(session, email)
-    if user is None or not await verify_password(password, user.password_hash):
+    # unknown email still pays for one bcrypt check, so timing does not leak existence
+    hashed = user.password_hash if user else await _dummy_hash()
+    if not await verify_password(password, hashed) or user is None:
         raise AppError("invalid_credentials", 401, "Wrong email or password")
     if not user.is_active:
         raise ACCOUNT_DISABLED
@@ -88,11 +102,11 @@ async def login(session: AsyncSession, email: str, password: str) -> AuthOut:
 async def refresh(session: AsyncSession, refresh_token: str) -> TokenOut:
     invalid = AppError("invalid_refresh_token", 401, "Invalid or expired refresh token")
     try:
-        user_id = decode_token(refresh_token, "refresh")
+        user_id, version = decode_token(refresh_token, "refresh")
     except ValueError as e:
         raise invalid from e
     user = await repo.get_by_id(session, user_id)
-    if user is None:
+    if user is None or user.token_version != version:
         raise invalid
     if not user.is_active:
         raise ACCOUNT_DISABLED
@@ -101,11 +115,11 @@ async def refresh(session: AsyncSession, refresh_token: str) -> TokenOut:
 
 async def user_from_access_token(session: AsyncSession, token: str) -> User:
     try:
-        user_id = decode_token(token, "access")
+        user_id, version = decode_token(token, "access")
     except ValueError as e:
         raise not_authenticated("Invalid or expired token") from e
     user = await repo.get_by_id(session, user_id)
-    if user is None:
+    if user is None or user.token_version != version:
         raise not_authenticated("Invalid or expired token")
     if not user.is_active:
         raise ACCOUNT_DISABLED

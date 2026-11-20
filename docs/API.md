@@ -16,7 +16,7 @@ Base path `/api/v1`; plus `GET /health` (public, `{"status":"ok"}`). Schema name
 | validation_error | 422 | body/query invalid |
 | invalid_credentials | 401 | wrong email/password |
 | not_authenticated | 401 | missing/invalid/expired access token |
-| invalid_refresh_token | 401 | refresh token invalid/expired/revoked |
+| invalid_refresh_token | 401 | refresh token invalid/expired/revoked (password change or admin deactivation bumps `users.token_version`, revoking all earlier access/refresh tokens) |
 | account_disabled | 403 | `is_active=false` |
 | forbidden | 403 | role/membership insufficient |
 | not_found | 404 | resource missing or not visible to caller |
